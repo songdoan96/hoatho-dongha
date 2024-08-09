@@ -2,12 +2,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Button } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import Loading from "../../components/Loading";
 import { showToast } from "../../store/toastSlice";
+import axiosErrorMessage from "../../utils/axiosError";
+import { BACKEND_IMAGE } from "../../utils/constants";
 import http from "../../utils/http";
-import { BACKEND_IMAGE, BACKEND_URL } from "../../utils/constants";
 
 interface ImageType {
   _id: string;
@@ -15,17 +17,16 @@ interface ImageType {
   active: boolean;
 }
 function AdminHome() {
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const dispatch = useDispatch();
 
-  const { isPending, data } = useQuery({
+  const { isPending, data, refetch } = useQuery({
     queryKey: ["welcomeImages"],
     queryFn: async () => await http.get("/admin/welcome"),
   });
 
-  // console.log("🚀 ~ AdminHome ~ data:", data);
-  const mutation = useMutation({
-    mutationFn: (formData) => {
+  const uploadMutation = useMutation({
+    mutationFn: (formData: FormData) => {
       return http.post("/admin/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -34,28 +35,70 @@ function AdminHome() {
     },
     onSuccess: (response) => {
       dispatch(showToast({ message: response.data.message }));
+      refetch();
     },
-    onError: (error) => {
+    onError: (error: AxiosError) => {
       dispatch(
         showToast({
-          message: error.response.data.message,
+          message: axiosErrorMessage(error),
           type: "error",
         })
       );
     },
   });
+
+  const changeActiveMutation = useMutation({
+    mutationFn: async (id: string) => await http.post("/admin/upload/" + id),
+    onSuccess: (response) => {
+      dispatch(showToast({ message: response.data.message }));
+      refetch();
+    },
+    onError: (error: AxiosError) => {
+      dispatch(
+        showToast({
+          message: axiosErrorMessage(error),
+          type: "error",
+        })
+      );
+      refetch();
+    },
+  });
+
+  const deleteImageMutation = useMutation({
+    mutationFn: async (id: string) => await http.delete("/admin/upload/" + id),
+    onSuccess: (response) => {
+      dispatch(showToast({ message: response.data.message }));
+      refetch();
+    },
+    onError: (error: AxiosError) => {
+      dispatch(
+        showToast({
+          message: axiosErrorMessage(error),
+          type: "error",
+        })
+      );
+      refetch();
+    },
+  });
+
+  function handleChangeFile(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files && event.target.files.length > 0) {
+      setFile(event.target.files[0]);
+    }
+  }
   function handleUploadSubmit() {
     const formData = new FormData();
-    formData.append("file", file);
-    mutation.mutate(formData);
+    if (file) {
+      formData.append("file", file);
+      uploadMutation.mutate(formData);
+    }
   }
-  function handleChangeFile(e) {
-    setFile(e.target.files[0]);
+  function handleToggle(id: string) {
+    changeActiveMutation.mutate(id);
   }
-
-  const handleToggle = (value: string) => () => {
-    console.log("🚀 ~ handleToggle ~ value:", value);
-  };
+  function handleDelete(id: string) {
+    deleteImageMutation.mutate(id);
+  }
 
   if (isPending) {
     return <Loading full />;
@@ -74,14 +117,17 @@ function AdminHome() {
         <div className="flex flex-wrap mt-4">
           {data?.data &&
             data.data.images.map((image: ImageType) => (
-              <div className="w-1/2 flex p-2 gap-2" key={image._id}>
+              <div className="w-full md:w-1/2 flex p-2 gap-2" key={image._id}>
                 <img
                   src={BACKEND_IMAGE + image.image}
                   alt={image.image}
                   className="h-20 w-40 bg-cover bg-no-repeat object-cover"
                 />
-                <Checkbox onChange={handleToggle(image._id)} checked={image.active} />
+                <Checkbox onChange={() => handleToggle(image._id)} checked={image.active} />
                 <Button
+                  onClick={() => {
+                    if (confirm("Xóa ảnh này ?")) handleDelete(image._id);
+                  }}
                   className="inline-block text-red-500 mt-2"
                   variant="text"
                   startIcon={<DeleteIcon />}

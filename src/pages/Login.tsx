@@ -11,6 +11,7 @@ import { setAuth } from "../store/authSlice";
 import { showToast } from "../store/toastSlice";
 import http from "../utils/http";
 import { routes } from "../utils/routes";
+import axiosErrorMessage from "../utils/axiosError";
 function Login() {
   const auth = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
@@ -52,9 +53,7 @@ function Login() {
       routes.map((route) => route.role === data.data.data.role && navigate(route.path));
     },
     onError: (error: AxiosError) => {
-      const message: string =
-        (error.response?.data as { message?: string })?.message || "Đăng nhập không thành công";
-      setError(message);
+      setError(axiosErrorMessage(error));
     },
   });
   if (loading) {

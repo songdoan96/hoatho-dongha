@@ -26,14 +26,18 @@ function Welcome() {
     return <Loading full />;
   }
   return (
-    <div className="flex justify-center items-center overflow-hidden">
-      {data?.data.images.length > 0 && (
+    <div className="flex h-screen justify-center items-center overflow-hidden">
+      {data?.data.images.length > 0 ? (
         <img
-          className="w-full h-full"
+          className="w-full object-cover bg-no-repeat bg-center"
           key={data?.data.images[index]._id}
           src={BACKEND_IMAGE + data?.data.images[index].image}
           alt="Image from database"
         />
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <h1>Chưa có nội dung thông báo</h1>
+        </div>
       )}
     </div>
   );
