@@ -16,6 +16,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 const AdminRouter = Router();
 AdminRouter.post("/upload", AuthMiddleware, upload.single("file"), AdminController.upload);
+AdminRouter.post("/upload/:id", AuthMiddleware, AdminController.changeActive);
+AdminRouter.delete("/upload/:id", AuthMiddleware, AdminController.deleteImage);
 AdminRouter.get("/welcome", AdminController.getImages);
 
 export { AdminRouter };
