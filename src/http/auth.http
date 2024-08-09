@@ -1,0 +1,31 @@
+# baseURL
+@baseURL = http://localhost:8000/auth
+
+# User Login
+POST {{ baseURL }}/login
+Content-Type: application/json
+
+{
+    "username": "khophulieu",
+    "password": "123"
+}
+
+### Get current user
+GET {{ baseURL }}/me
+
+content-type: application/json
+accept: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Njk1YWJkOTA3ZWI0YzFhZTRmNmEyZGQiLCJpYXQiOjE3MjEwODYyODIsImV4cCI6MTcyMTA4OTg4Mn0.SmYf7JTqL2PNPduYPxDIQSDPi_rHMkZ6lWR3DQvvJ8I
+
+
+
+
+
+
+
+
+
+
+
+
+GET  {{ baseURL }}/me
