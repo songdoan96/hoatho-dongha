@@ -7,6 +7,7 @@ const MainRouter = Router();
 MainRouter.get("/", async (req, res, next) => {
   return res.send("HELLO");
 });
-MainRouter.get("/welcome", MainController.welcome);
+MainRouter.get("/welcome/images", MainController.welcome);
+MainRouter.get("/welcome/schedules", MainController.schedules);
 
 export { MainRouter };
