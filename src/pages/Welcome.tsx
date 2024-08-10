@@ -52,7 +52,7 @@ function Welcome() {
             }}
           >
             {scheduleQuery.data?.data.schedules.map((schedule: ScheduleType) => (
-              <li className="ml-96" key={schedule._id}>
+              <li style={{ marginLeft: "100vw" }} key={schedule._id}>
                 {formatDate(schedule.date)}: {schedule.content}
               </li>
             ))}
