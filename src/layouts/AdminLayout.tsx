@@ -6,6 +6,7 @@ export default function NestedList() {
       <div className="w-full md:w-1/12 bg-gray-100">
         <ul className="flex flex-wrap gap-2 p-4">
           <Link to="/admin">Welcome</Link>
+          <Link to="/admin">Lịch làm việc</Link>
         </ul>
       </div>
       <div className="p-2 w-full">
