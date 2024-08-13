@@ -18,7 +18,7 @@ module.exports = {
         PM2_SERVE_PATH: "./dist",
         PM2_SERVE_PORT: 4173,
         PM2_SERVE_SPA: "true",
-        VITE_BACKEND_URL: "http://172.17.0.30:8888/",
+        VITE_BACKEND_URL: "http://192.168.1.8:8888/",
       },
     },
   ],

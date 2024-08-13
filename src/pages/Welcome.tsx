@@ -5,8 +5,8 @@ import { BACKEND_IMAGE } from "../utils/constants";
 import http from "../utils/http";
 import { formatDate } from "../utils/DateTimeFormat";
 
-// const INTERVAL = 1000; //1m
-const INTERVAL = 1 * 60 * 1000; //1m
+const INTERVAL = 3000; //1m
+// const INTERVAL = 1 * 60 * 1000; //1m
 interface ScheduleType {
   _id: string;
   date: Date;
@@ -39,42 +39,32 @@ function Welcome() {
 
   return (
     <div className="overflow-hidden">
-      {scheduleQuery.data?.data.schedules.length && (
-        <article className="bg-black text-3xl text-white overflow-hidden whitespace-nowrap w-screen flex">
+      {scheduleQuery.data?.data.schedules.length > 0 && (
+        <article className="bg-[#0163C6]  text-[#ededed] text-lg font-black md:text-3xl overflow-hidden whitespace-nowrap w-screen flex">
           <ul
+            className="text-marquee"
             style={{
               display: "flex",
               padding: 0,
-              animationName: "marquee",
-              animationIterationCount: "infinite",
-              animationDuration: scheduleQuery.data?.data.schedules.length * 10 + "s",
-              animationTimingFunction: "linear",
+              animationDuration: scheduleQuery.data?.data.schedules.length * 20 + "s",
             }}
           >
             {scheduleQuery.data?.data.schedules.map((schedule: ScheduleType) => (
-              <li style={{ marginLeft: "100vw" }} key={schedule._id}>
-                {formatDate(schedule.date)}: {schedule.content}
+              <li
+                className="md:py-1"
+                style={{ marginLeft: "calc(100vw / 3)", listStyleType: "none" }}
+                key={schedule._id}
+              >
+                &bull; {formatDate(schedule.date)}: {schedule.content}
               </li>
             ))}
           </ul>
         </article>
       )}
 
-      {/* {scheduleQuery.data?.data.schedules && (
-        <div className="overflow-x-hidden">
-          <div className="animate-marquee whitespace-nowrap uppercase text-3xl font-extrabold">
-            {scheduleQuery.data?.data.schedules.map((schedule) => (
-              <span className="py-2 ml-12" key={schedule._id}>
-                &bull; {schedule.content}
-              </span>
-            ))}
-          </div>
-        </div>
-      )} */}
-
       {data?.data.images.length > 0 && (
         <img
-          className="w-full h-full object-cover bg-no-repeat bg-center"
+          className="w-full h-auto object-cover bg-no-repeat bg-center"
           key={data?.data.images[index]._id}
           src={BACKEND_IMAGE + data?.data.images[index].image}
           alt="Image from database"

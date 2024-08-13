@@ -12,6 +12,7 @@ import PrivateRoute from "./layouts/PrivateRoute";
 import PLLayout from "./layouts/PLLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import NotFound from "./pages/NotFound";
+import ADSchedule from "./pages/ADMIN/ADSchedule";
 
 export default function App() {
   const { show, message, type } = useSelector((state: RootState) => state.toast);
@@ -26,8 +27,9 @@ export default function App() {
           <Route path="/phu-lieu" element={<PLLayout />}>
             <Route index element={<PLHome />} />
           </Route>
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="admin" element={<AdminLayout />}>
             <Route index element={<ADHome />} />
+            <Route path="lich-lam-viec" element={<ADSchedule />} />
           </Route>
         </Route>
         <Route path="/dang-nhap" element={<Login />} />

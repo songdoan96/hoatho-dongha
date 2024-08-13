@@ -1,5 +1,5 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Button } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { Button, IconButton } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -117,21 +117,21 @@ function AdminHome() {
         <div className="flex flex-wrap mt-4">
           {data?.data &&
             data.data.images.map((image: ImageType) => (
-              <div className="w-full md:w-1/2 flex p-2 gap-2" key={image._id}>
+              <div className="w-full md:w-1/2 flex items-center p-2 gap-2" key={image._id}>
                 <img
                   src={BACKEND_IMAGE + image.image}
                   alt={image.image}
                   className="h-20 w-40 bg-cover bg-no-repeat object-cover"
                 />
                 <Checkbox onChange={() => handleToggle(image._id)} checked={image.active} />
-                <Button
+                <IconButton
+                  className="text-red-500"
                   onClick={() => {
                     if (confirm("Xóa ảnh này ?")) handleDelete(image._id);
                   }}
-                  className="inline-block text-red-500 mt-2"
-                  variant="text"
-                  startIcon={<DeleteIcon />}
-                />
+                >
+                  <Delete />
+                </IconButton>
               </div>
             ))}
         </div>
