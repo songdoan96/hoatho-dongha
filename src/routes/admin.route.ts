@@ -15,9 +15,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 const AdminRouter = Router();
+AdminRouter.get("/welcome", AuthMiddleware, AdminController.getImages);
 AdminRouter.post("/upload", AuthMiddleware, upload.single("file"), AdminController.upload);
 AdminRouter.post("/upload/:id", AuthMiddleware, AdminController.changeActive);
 AdminRouter.delete("/upload/:id", AuthMiddleware, AdminController.deleteImage);
-AdminRouter.get("/welcome", AdminController.getImages);
+
+AdminRouter.get("/schedules", AuthMiddleware, AdminController.getSchedule);
+AdminRouter.post("/schedule/create", AuthMiddleware, AdminController.createSchedule);
+AdminRouter.delete("/schedule/:id", AuthMiddleware, AdminController.deleteSchedule);
+// AdminRouter.post("/schedules/create", AuthMiddleware, AdminController.createSchedule);
 
 export { AdminRouter };

@@ -3,6 +3,7 @@ import "express-async-errors";
 import { WelcomeModel } from "../models/welcomes.model";
 import path from "path";
 import fs from "fs";
+import { ScheduleModel } from "../models/schedules.model";
 class AuthController {
   async getImages(req: Request, res: Response, next: NextFunction) {
     const images = await WelcomeModel.find();
@@ -33,6 +34,19 @@ class AuthController {
         return res.json({ message: "Xóa ảnh thành công" });
       });
     }
+  }
+  async getSchedule(req: Request, res: Response, next: NextFunction) {
+    const schedules = await ScheduleModel.find();
+    return res.json({ schedules });
+  }
+  async createSchedule(req: Request, res: Response, next: NextFunction) {
+    const schedule = await ScheduleModel.create(req.body);
+    return res.json({ schedule, message: "Thêm lịch thành công" });
+  }
+  async deleteSchedule(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    await ScheduleModel.findByIdAndDelete(id);
+    return res.json({ message: "Xóa lịch thành công" });
   }
 }
 export default new AuthController();
